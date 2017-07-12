@@ -1,0 +1,85 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>demo</title>
+    <meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,maximum-scale=1,minimum-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="">
+    <meta name="msapplication-tap-highlight" content="no">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="stylesheet" type="text/css" href="./style.css">
+   
+</head>
+
+<body>
+    <p>a demo of </p>
+    <a href="https://zhuanlan.zhihu.com/p/27797001?group_id=868052469056438272">https://zhuanlan.zhihu.com/p/27797001?group_id=868052469056438272</a>
+    <br>
+    <a href="http://www.decisionsciencenews.com/2017/06/19/counterintuitive-problem-everyone-room-keeps-giving-dollars-random-others-youll-never-guess-happens-next/">http://www.decisionsciencenews.com/2017/06/19/counterintuitive-problem-everyone-room-keeps-giving-dollars-random-others-youll-never-guess-happens-next/</a>
+    <ul>
+        <li re="players">
+            {{ name }}: {{ point }}
+        </li>
+    </ul>
+    <script src="./redom.js"></script>
+    <script>
+        
+        function getRandomInt(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+        var playerNames = [
+            '李',
+            '张',
+            '王',
+            '刘',
+            '赵',
+            '徐',
+            '于',
+            '吴',
+            '马',
+            '孙'
+        ]
+        var players = []
+        var playerNum = 0
+        while (playerNum < 10) {
+            players.push({
+                name: playerNames[playerNum],
+                point: 10
+            })
+            playerNum ++
+        }
+
+        function getRandomTarget(filter) {
+            do {
+                var random = getRandomInt(0, 9)
+            }
+            while (random === filter)
+            return random
+        }
+
+        function runLoop () {
+            for (var i = 0; i < players.length; i ++) {
+                if (players[i].point === 0) {
+                    continue
+                }
+                players[i].point --
+                var target = getRandomTarget(i)
+                players[target].point ++
+            }
+            console.log(players)
+        }
+        
+        for (var i = 0 ; i < 100; i ++) {
+            runLoop()
+        }
+        var reDom = new ReDom({
+            data: {
+                players: players
+            }
+        })
+    </script>
+
+</body>
+</html>

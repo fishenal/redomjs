@@ -1,0 +1,110 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>demo</title>
+    <meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,maximum-scale=1,minimum-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="">
+    <meta name="msapplication-tap-highlight" content="no">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="stylesheet" type="text/css" href="./style.css">
+    <script type="text/javascript" src="./js/zepto.min.js"></script>
+    <script type="text/javascript" src="./js/rem.js"></script>
+</head>
+
+<body>
+    <ul>
+        <li re="lists" title="{{ name }}">
+            <a title="{{ val }}">
+                {{ name }} + {{ val }}
+                <span re="buttons">{{ evt }} value is {{ val }}</span>
+            </a>
+        </li>
+    </ul>
+    <div re="lists" title="{{ name }}">
+        <a title="{{ val }}">
+            {{ name }}: {{ val }}
+        </a>
+    </div>
+    
+    <div re="numberList" title="{{#}}">{{#}}</div>
+    <table>
+        <tr re="tableData">
+            <td re="{{#}}">
+                {{#}}
+            </td>
+        </tr>
+    </table>
+
+
+
+    <ul>
+        <li re="newsList" class="{{cls}}">
+            <p>{{ title }} <a href="{{ link}}">click</a></p>
+        </li>
+    </ul>
+
+    <script src="./redom.js"></script>
+    <script>
+        var reDom = new ReDom({
+            data: {
+                numberList: ['apple', 'banana', 'lemon', 'cat', 'dog'],
+                lists: [
+                    {
+                        name: 'apple',
+                        val: 1.5
+                    },
+                    {
+                        name: 'banana',
+                        val: 5.4
+                    }
+                ],
+                buttons: [
+                    {
+                        evt: 'click',
+                        val: 2
+                    },
+                    {
+                        evt: 'touch',
+                        val: 9
+                    }
+                ],
+                newsList: [
+                    {
+                        src: './images/c1.png',
+                        title: 'news title1',
+                        cls: 'cimg',
+                        link: 'https://resource.cmbchina.com/fsp/File/G20170505G303830G31312D31332D5C315C395C.DAT'
+                    },
+                    {
+                        src: './images/c2.png',
+                        title: 'news title2',
+                        cls: 'cimg',
+                        link: 'https://market.cmbchina.com/ccard/wap/gjjdwx/index.html'
+                    },
+                    {
+                        src: './images/c3.png',
+                        title: 'news title3',
+                        cls: 'cimg',
+                        link: 'https://m.trip.cmbchina.com/Flight/FlightSearch/Home.html?refererEnum=interflight'
+                    },
+                    {
+                        src: './images/c4.png',
+                        title: 'news title4',
+                        cls: 'cimg',
+                        link: 'https://m.avis.cn/cmbm'
+                    },
+                    {
+                        src: './images/c5.png',
+                        title: 'news title5',
+                        cls: 'cimg',
+                        link: 'https://resource.cmbchina.com/fsp/File/246DDB987A86AC262202407B9.DAT'
+                    }
+                ]
+            }
+        })
+    </script>
+</body>
+</html>
