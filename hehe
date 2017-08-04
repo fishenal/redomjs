@@ -1,0 +1,213 @@
+import { gaussian } from './utils.js'
+class Avatar {
+	constructor ({name, ability, age, stableRate, boostRate}) {
+		this.name = name
+		this.ability = ability
+		this.stableRate = stableRate
+		this.boostRate = boostRate
+		this.age = age
+	}
+
+	getRuntimeScore () {
+		let score = this.ability
+		let stableEff = this.rtnStableEffect()
+		let boostEff = this.rtnBoostEffect()
+		// console.log(stableEff, boostEff, Gaussian(1, 0.15)())
+		return score - score * stableEff + score * boostEff
+	}
+
+	rtnStableEffect () {
+		let stableEff = 0
+		let seed = Math.random()
+		if (Math.random() > this.stableRate) {
+			stableEff =  0.15 - 0.15 * this.ability
+		}
+
+		return stableEff * gaussian(1, 0.15)()
+	}
+
+	rtnBoostEffect () {
+		let boostEff = 0
+		if (Math.random() < this.boostRate) {
+			boostEff = 0.02 + 0.18 * this.ability
+		}
+		return boostEff * gaussian(1, 0.15)()
+	}
+}
+export { Avatar }
+
+
+
+
+
+
+class Battle {
+	constructor ({host, guest, set}) {
+		this.host = host
+		this.guest = guest
+		this.set = set
+		// host, guest
+		this.result = [0, 0]
+	}
+	getTeamAbility (team) {
+		var total = 0
+		for (let i = 0; i < team.teammate.length; i ++) {
+			total += team.teammate[i].ability
+		}
+		return total / team.teammate.length
+	}
+	run () {
+		let set = this.set
+		console.log(this.getTeamAbility(this.host))
+		console.log(this.getTeamAbility(this.guest))
+		for (let i = 0; i < set; i ++) {
+			if (this.getTeamAbility(this.host) > this.getTeamAbility(this.guest)) {
+				this.result[0] ++
+			}
+			else {
+				this.result[1] ++
+			}
+		}
+		return this.result
+	}
+}
+export { Battle }
+
+
+import { getAverageFromNumArr, getVariance, gaussian } from './utils.js'
+class Team {
+	constructor ({name, teammate}) {
+		this.name = name
+		this.teammate = teammate
+	}
+
+	getRuntimeTeamScore () {
+		let total = 0
+		let scoreArr = []
+		for( let key in this.teammate ) {
+			let thisScore = this.teammate[key].getRuntimeScore()
+			total += thisScore
+			scoreArr.push(thisScore)
+		}
+		let variance = getVariance(scoreArr)
+		let teamEff = - 0.5 / 0.01 * variance + 0.5
+
+		total = (total + total * teamEff) * gaussian(1, 0.2)()
+		console.log(total)
+		console.log(variance)
+	}
+}
+export { Team }
+
+
+let gaussian = function (mean, stdev) {
+	var y2;
+    var use_last = false;
+    return function() {
+        var y1;
+        if(use_last) {
+           y1 = y2;
+           use_last = false;
+        }
+        else {
+            var x1, x2, w;
+            do {
+                 x1 = 2.0 * Math.random() - 1.0;
+                 x2 = 2.0 * Math.random() - 1.0;
+                 w  = x1 * x1 + x2 * x2;               
+            } while( w >= 1.0);
+            w = Math.sqrt((-2.0 * Math.log(w))/w);
+            y1 = x1 * w;
+            y2 = x2 * w;
+            use_last = true;
+       }
+
+       var retval = mean + stdev * y1;
+       if(retval > 0) 
+           return retval;
+       return -retval;
+   }
+}
+let isArray = function (obj) {
+	return Object.prototype.toString.call(obj) === "[object Array]";
+}
+let getNumWithSetDec = function( num, numOfDec ){
+	var pow10s = Math.pow( 10, numOfDec || 0 );
+	return ( numOfDec ) ? Math.round( pow10s * num ) / pow10s : num;
+}
+let getAverageFromNumArr = function( numArr, numOfDec ){
+	if( !isArray( numArr ) ){ return false;	}
+	var i = numArr.length, 
+		sum = 0;
+	while( i-- ){
+		sum += numArr[ i ];
+	}
+	return getNumWithSetDec( (sum / numArr.length ), numOfDec );
+}
+let getVariance = function ( numArr, numOfDec ) {
+	if( !isArray(numArr) ){ return false; }
+	var avg = getAverageFromNumArr( numArr, numOfDec ), 
+		i = numArr.length,
+		v = 0;
+ 
+	while( i-- ){
+		v += Math.pow( (numArr[ i ] - avg), 2 );
+	}
+	v /= numArr.length;
+	return getNumWithSetDec( v, numOfDec );
+}
+
+export {
+	gaussian,
+	isArray,
+	getNumWithSetDec,
+	getAverageFromNumArr,
+	getVariance
+}
+
+
+import { Avatar } from './src/avatar'
+import { Battle } from './src/battle'
+import { Team } from './src/team'
+
+let avatarA = new Avatar({
+	name:'fish',
+	ability: 0.9,
+	stableRate: 0.8,
+	boostRate: 0.2,
+	age: 20
+})
+let avatarB = new Avatar({
+	name:'bosin',
+	ability: 0.8,
+	stableRate: 0.7,
+	boostRate: 0.1,
+	age: 22
+})
+let avatarC = new Avatar({
+	name:'eileen',
+	ability: 0.84,
+	stableRate: 0.6,
+	boostRate: 0.2,
+	age: 21
+})
+let avatarD = new Avatar({
+	name:'undead',
+	ability: 0.85,
+	stableRate: 0.8,
+	boostRate: 0.1,
+	age: 20
+})
+let avatarE = new Avatar({
+	name:'shy',
+	ability: 0.56,
+	stableRate: 0.9,
+	boostRate: 0.2,
+	age: 23
+})
+
+
+let TeamA = new Team({
+	name: 'LGD',
+	teammate: [avatarA, avatarB, avatarC, avatarD, avatarE]
+})
